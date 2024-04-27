@@ -2,23 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return response()->json(Post::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -43,36 +38,22 @@ class PostController extends Controller
         return response()->json($post);
     }
 
-    public function storePost(Request $request)
+    public function storePost(StorePostRequest $request)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'body' => 'required|string',
-            'photos' => 'array',
-            'photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $post = Post::create([
-            'title' => $validatedData['title'],
-            'body' => $validatedData['body'],
-        ]);
-
-        $postId = $post->id;
+        $post = Post::create($request->validated());
 
         if ($request->hasFile('photos')) {
-            $photos = $this->getImage($request->photos, $postId);
-            $post->photos()->insert($photos);
+            $photos = $this->getPhotos($request->photos, $post->id);
         }
-
+        
+        $post->photos()->insert($photos);
         return response()->json($post);
     }
 
 
 
-    public function getImage($data, $postId)
+    public function getPhotos($data, $postId)
     {
-        $photos = [];
-
         foreach ($data as $photo) {
             $photoPath = $photo->store('post_photos');
 
