@@ -45,8 +45,8 @@ class PostController extends Controller
         if ($request->hasFile('photos')) {
             $photos = $this->getPhotos($request->photos, $post->id);
         }
-        
-        $post->photos()->insert($photos);
+        // return response()->json($photos);
+        $post->photos()->insert($photos); // optimal yo'l
         return response()->json($post);
     }
 
