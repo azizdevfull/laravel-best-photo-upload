@@ -13,7 +13,6 @@ class PostController extends Controller
     {
         return response()->json(Post::all());
     }
-
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -49,9 +48,6 @@ class PostController extends Controller
         $post->photos()->insert($photos); // optimal yo'l
         return response()->json($post);
     }
-
-
-
     public function getPhotos($data, $postId)
     {
         foreach ($data as $photo) {
