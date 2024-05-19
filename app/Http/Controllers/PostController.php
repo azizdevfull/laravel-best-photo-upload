@@ -55,7 +55,7 @@ class PostController extends Controller
     public function getPhotos($data, $postId)
     {
         foreach ($data as $photo) {
-            $photoPath = $photo->store('post_photos');
+            $photoPath = $photo->store('post_photos', 'public');
 
             $photos[] = [
                 'path' => $photoPath,
