@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +12,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        return response()->json(Post::all());
+        return response()->json(PostResource::collection(Post::with('photos')->get()));
     }
     public function store(Request $request)
     {
